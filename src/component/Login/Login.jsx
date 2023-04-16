@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../authProvider/AuthProvider';
 
 const Login = () => {
+    const {user,loginUser}=useContext(AuthContext)
+    const [showPassword, setShowPassword] = useState(false);
     const handleLogin = event => {
         event.preventDefault()
         const form = event.target;
         const email = form.email.value;
         const password = form.password.value;
         form.reset()
+        loginUser(email,password)
+        .then(result=>{
+            const loggedUser=result.user
+        })
+        .catch(error=>{
+            console.log(error);
+        })
         console.log(email, password);
     }
-    const [showPassword, setShowPassword] = useState(false);
+ 
     const handleCheckboxChange = () => {
         setShowPassword(!showPassword);
     };

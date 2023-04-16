@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../authProvider/AuthProvider';
 
 const Register = () => {
-    const handleRegister=(event)=>{
+    const [showPassword, setShowPassword] = useState(false);
+    const {user,createUser}=useContext(AuthContext)
+    const handleRegister = (event) => {
         event.preventDefault()
-        const form=event.target;
-        const name=form.text.value;
-        const email=form.email.value;
-        const password=form.password.value;
+        const form = event.target;
+        const name = form.text.value;
+        const email = form.email.value;
+        const password = form.password.value;
         form.reset()
-        console.log(name,email,password);
+        createUser(email,password)
+        .then(result=>{
+            const loggedUser=result.user;
+           
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+        console.log(name, email, password);
     }
+
+    const handleCheckboxChange = () => {
+        setShowPassword(!showPassword);
+    };
     return (
         <>
             <div className="hero min-h-screen bg-base-200 mt-8 ">
@@ -24,19 +39,33 @@ const Register = () => {
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="text" name='text' placeholder="Enter Your Name" className="input input-bordered" required/>
+                                <input type="text" name='text' placeholder="Enter Your Name" className="input input-bordered" required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="email" name='email' placeholder="Enter Your Email" className="input input-bordered" required/>
+                                <input type="email" name='email' placeholder="Enter Your Email" className="input input-bordered" required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" name='password' placeholder="Enter Your Password" className="input input-bordered" required/>
+                                <input  type={showPassword ? "text" : "password"}  name='password' placeholder="Enter Your Password" className="input input-bordered" required />
+
+
+
+                                {/* click on show password  */}
+
+                                <div className="form-control">
+                                    <label className="label cursor-pointer">
+                                        <span className="label-text">Show Password</span>
+                                        <input onChange={handleCheckboxChange} type="checkbox" checked={showPassword} className="checkbox" />
+                                    </label>
+                                </div>
+
+
+
                                 <label className="label">
                                     <span> Already an account? <Link to='/login' className="label-text-alt link link-hover text-xl"> Login </Link></span>
                                 </label>
